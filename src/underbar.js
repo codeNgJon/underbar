@@ -98,9 +98,17 @@ var _ = {};
             }
       });
       return newArr;
-    }
+    };
+
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var newArr =[];
+    _.each(array, function(item){
+        if(_.indexOf(newArr,item)===-1){
+          newArr.push(item);
+        }
+    })
+    return newArr;
   };
 
 
