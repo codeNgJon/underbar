@@ -144,8 +144,18 @@ var _ = {};
 
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
-  _.invoke = function(collection, functionOrKey, args) {
-  };
+  _.invoke = function(collection, functionOrKey, args) { 
+      var newArr = [];
+      for(var i=0; i<collection.length; i++){
+        if(typeof functionOrKey === 'string'){
+          newArr[i] = collection[i][functionOrKey]();
+        } else if(typeof functionOrKey === "function"){
+          newArr[i] = functionOrKey.apply(collection[i]);
+        }
+      }
+      return newArr;
+    };
+
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
@@ -161,11 +171,24 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
+       if(arguments.length<3){
+          accumulator = collection[0];
+        } 
+      _.each(collection, function(item){
+        accumulator = iterator(accumulator, item);
+      })
+      return accumulator;
   };
-
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
-    // TIP: Many iteration problems can be most easily expressed in
+    return _.reduce(collection, function(acc, item){
+      if(acc === target){
+        return true;
+      }
+    })
+  };
+
+  /*  // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
     return _.reduce(collection, function(wasFound, item) {
       if (wasFound) {
@@ -174,11 +197,25 @@ var _ = {};
       return item === target;
     }, false);
   };
-
+*/
 
   // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator) {
+  _.every = function(collection, iterator){
     // TIP: Try re-using reduce() here.
+    if(collection.length ===0){
+      return true;
+    }
+    return _.reduce(collection, function(acc, item){
+        if(item){
+          return true;
+        } 
+        else if(iterator(item)){
+          acc = item;
+        }
+        else{
+            return false;
+        }
+    })
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
