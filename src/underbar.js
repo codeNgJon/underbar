@@ -194,14 +194,25 @@ var _ = {};
 
 
   // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator){
+  _.every = function(collection, iterator) {
+    var counter = 0;
+    return _.reduce(collection, function(acc, item){
+      if(iterator && iterator(item)){
+        return acc;
+      }
+      return false;
+
+   });
+  };
+
+
+
     // TIP: Try re-using reduce() here.
-      var result = 0;
+ /*    var result = 0;
     _.each(collection, function(item){
-      if(iterator(item)){
+      if(iterator && iterator(item)){
         result ++;
       }
-      return item;
     })
     if(result === collection.length){
       return true
@@ -210,23 +221,8 @@ var _ = {};
     }
   };
 
-/*
-    if(collection.length ===0){
-      return true;
-    }
-    return _.reduce(collection, function(acc, item){
-        if(item){
-          return true;
-        } 
-        else if(iterator(item)){
-          acc = item;
-        }
-        else{
-            return false;
-        }
-    })
-  };
-*/
+    */
+
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
@@ -247,13 +243,30 @@ var _ = {};
   // Example:
   //   var obj1 = {key1: "something"};
   //   _.extend(obj1, {
-  //     key2: "something new",
-  //     key3: "something else new"
-  //   }, {
+  //                  key2: "something new",
+  //                  key3: "something else new"
+  //                  }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-  };
+     if(arguments.length>1){
+          for(var i = 1; i< arguments.length; i++){
+              var currObj = arguments[i];
+              for(var key in currObj){
+                obj[key] = currObj[key];
+              }
+          }
+      }
+      return obj;
+};
+              /*if(obj1.length >1){
+                for(var key in obj1){
+                  newObj[key];
+                } 
+              }
+              
+              newObj[obj1];
+              */
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
