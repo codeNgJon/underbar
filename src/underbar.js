@@ -174,10 +174,12 @@ var _ = {};
       if(arguments.length<3){
           accumulator = collection[0];
         } 
+        
       _.each(collection, function(item){
         accumulator = iterator(accumulator, item);
-      })
+      });
       return accumulator;
+    
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -195,41 +197,41 @@ var _ = {};
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    var counter = 0;
-    return _.reduce(collection, function(acc, item){
-      if(iterator && iterator(item)){
-        return acc;
-      }
-      return false;
-
-   });
+    iterator = iterator || _.identity
+      return _.reduce(collection, function(acc,item){
+                if(acc && iterator(item)){
+                  return true;
+                }
+                return false;
+              },true)
   };
-
-
-
-    // TIP: Try re-using reduce() here.
- /*    var result = 0;
-    _.each(collection, function(item){
-      if(iterator && iterator(item)){
-        result ++;
-      }
-    })
-    if(result === collection.length){
-      return true
-    } else{
-      return false;
-    }
-  };
-
-    */
+// TIP: Try re-using reduce() here.
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
+    iterator = iterator || _.identity
+    var result = false;
+    _.each(collection, function(item){
+        if(iterator(item)){
+          result = true;
+          return result;
+        }
+    })
+    return result;
   };
 
-
+  /*
+      var result = false;
+         _.every(collection, function(acc, item){
+              if(iterator(acc,item)){
+                return result = true;
+              }
+        });
+        return result
+    // TIP: There's a very clever way to re-use every() here.
+  };
+*/
   /**
    * OBJECTS
    * =======
@@ -323,8 +325,17 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-  };
-
+      var obj = {};
+    return function(){
+      if(obj[arguments[0]]){
+        return obj[arguments[0]];
+      } else{ 
+        obj[arguments[0]] = func.apply(this,arguments);
+        return obj[arguments[0]];
+        } 
+    }
+};
+ 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   //
@@ -332,6 +343,10 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var arg = Array.prototype.slice.call(arguments).slice(2);
+    if(arg && wait){
+      return setTimeout(function(){ return func.apply(this, arg);}, wait);
+    };
   };
 
 
@@ -346,6 +361,16 @@ var _ = {};
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var arr = array.slice(0);
+    var newArr = [];
+    for(var i=0; i<arr.length;i++){
+       var index = Math.floor(Math.random()*arr.length);
+        if(arr[index]!== undefined){
+          newArr.push(arr[index]);
+          delete arr[index]
+        }
+    }
+    return newArr;
   };
 
 
