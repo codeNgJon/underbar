@@ -362,16 +362,16 @@ var _ = {};
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
     var arr = array.slice(0);
-    var newArr = [];
-    for(var i=0; i<arr.length;i++){
-       var index = Math.floor(Math.random()*arr.length);
-        if(arr[index]!== undefined){
-          newArr.push(arr[index]);
-          delete arr[index]
-        }
-    }
+    var newArr =[];
+    var length = arr.length
+      while(length>0){
+        var i = Math.floor(Math.random()*length)
+          newArr.push(arr[i]);
+          arr.splice(i,1)
+          length -= 1;
+      } 
     return newArr;
-  };
+  }
 
 
   /**
